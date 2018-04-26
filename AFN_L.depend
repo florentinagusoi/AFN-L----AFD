@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1524776469 source:c:\users\flori\desktop\tema 2\afn_l\main.cpp
+	<iostream>
+	<fstream>
+	<string.h>
+
