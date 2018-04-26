@@ -8,7 +8,15 @@ struct Stare
     char litera;
     int nr_nodStanga, nr_nodDreapta;
 };
-
+/**  
+ *
+ *@param litera este litera pe care o caut in automat
+ *@param litera2 este a doua litera cautata
+ *@param Nr_Stari este numarul total de stari ale automatului
+ *@param Nr_Total_Tranzitii este numarul de tranzitii citite din date.in
+ *@param este un vector de elemente de tip structura denumita "Stare"
+ *@param drum este matricea in care vor fi puse lambda tranzitiile aplicate fiecarei stari
+ */   
 void Tranzitie_Litera( char litera, char litera2, int Nr_Stari, int Nr_Total_Tranzitii, Stare vector_Stari[20], int drum[20][20])
 {
     /// se construieste matrice in care retin pe linia fiecarei stari unde pot ajunge cu o lambda tranzitie aplicata
@@ -69,6 +77,12 @@ void Tranzitie_Litera( char litera, char litera2, int Nr_Stari, int Nr_Total_Tra
     drum[i][Indice_Coloana] = -1;
    }
 }
+/**
+*@param v este un vector in care este inserat elementul "element"
+*@param element este elementul care trebuie inserat
+*@param nr_elemente este transmis prin referinta si reprezinta numarul
+*total de elemente din vectorul v
+*/
 void Inserare( int v[20], int element, int &nr_elemente)
 {
     int i, ok = 1;
@@ -81,11 +95,27 @@ void Inserare( int v[20], int element, int &nr_elemente)
         nr_elemente ++;
    }
 }
-int MAKE_NUMBER(int &numar_stare, int element_nou)
+/**
+*@param numar_stare este un paramentru transmis prin referinta si 
+*reprezinta un numar obtinut in urma alipirii parametrului 
+*"element nou". Acest parametru va fi folosit pentru a 
+*diferentia starile AFD-ului rezultat
+*@param element_nou este o cifra care trebuie sa fie adaugata 
+*numarului "numar_stare
+*/
+void MAKE_NUMBER(int &numar_stare, int element_nou)
 {
     if(numar_stare==0) numar_stare = element_nou;
     else numar_stare = numar_stare*10 + element_nou;
 }
+/**
+*@param numar_de_transformat este un numar care va fi pus in
+*vectorul "vector_rezultat" pentru a manipula datele mai usor
+*@param vector_rezultat este vectorul format din componentele 
+*numarului din primul parametru al functiei
+*@param nr_cifre reprezinta numarul total de cifre al vectorului
+*vector_rezultate
+*/
 void Become_Vector( int numar_de_transformat, int vector_rezultat[20], int &nr_cifre)
 {
     nr_cifre = 0;
