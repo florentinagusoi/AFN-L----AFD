@@ -3,12 +3,59 @@
 #include <string.h>
 using namespace std;
 
+int stareinitiala, starifin[10], v[100], pozitieact, nrmuchii, nrfin;
+char cuvant[100];
+struct tranzitie
+{
+    char litera;
+    int nodcurent;
+    int nodurmator;
+} tranz[100];
+void automat(int starecurenta, char cuvant[100])
+{
+    int i,OK = 0;
+    char copie[100];
+    if(cuvant[0] == NULL)
+    {
+        for(i = 0; i < nrfin; i ++)
+            if(starecurenta == starifin[i])
+            {
+                v[pozitieact] = 1;
+                pozitieact ++;
+                OK = 1;
+            }
+        if(OK == 0)
+        {
+            v[pozitieact] = 0;
+            pozitieact ++;
+        }
+    }
+    for(i = 0; i < nrmuchii; i ++)
+        if(tranz[i].nodcurent == starecurenta && (cuvant[0] == tranz[i].litera || tranz[i].litera=='l'))
+        {
+            strcpy(copie, cuvant+1);
+            automat(tranz[i].nodurmator, copie);
+        }
+
+}
+bool verificareautomat(char cuvant[100])
+{
+    int i;
+    automat(stareinitiala, cuvant);
+    for(i = 0; i < pozitieact; i ++)
+        if(v[i] == 1)
+            return true;
+        return false;
+}
+
+
+
 struct Stare
 {
     char litera;
     int nr_nodStanga, nr_nodDreapta;
 };
-/**  
+/**
  *
  *@param litera este litera pe care o caut in automat
  *@param litera2 este a doua litera cautata
@@ -16,7 +63,7 @@ struct Stare
  *@param Nr_Total_Tranzitii este numarul de tranzitii citite din date.in
  *@param este un vector de elemente de tip structura denumita "Stare"
  *@param drum este matricea in care vor fi puse lambda tranzitiile aplicate fiecarei stari
- */   
+ */
 void Tranzitie_Litera( char litera, char litera2, int Nr_Stari, int Nr_Total_Tranzitii, Stare vector_Stari[20], int drum[20][20])
 {
     /// se construieste matrice in care retin pe linia fiecarei stari unde pot ajunge cu o lambda tranzitie aplicata
@@ -96,11 +143,11 @@ void Inserare( int v[20], int element, int &nr_elemente)
    }
 }
 /**
-*@param numar_stare este un paramentru transmis prin referinta si 
-*reprezinta un numar obtinut in urma alipirii parametrului 
-*"element nou". Acest parametru va fi folosit pentru a 
+*@param numar_stare este un paramentru transmis prin referinta si
+*reprezinta un numar obtinut in urma alipirii parametrului
+*"element nou". Acest parametru va fi folosit pentru a
 *diferentia starile AFD-ului rezultat
-*@param element_nou este o cifra care trebuie sa fie adaugata 
+*@param element_nou este o cifra care trebuie sa fie adaugata
 *numarului "numar_stare
 */
 void MAKE_NUMBER(int &numar_stare, int element_nou)
@@ -111,7 +158,7 @@ void MAKE_NUMBER(int &numar_stare, int element_nou)
 /**
 *@param numar_de_transformat este un numar care va fi pus in
 *vectorul "vector_rezultat" pentru a manipula datele mai usor
-*@param vector_rezultat este vectorul format din componentele 
+*@param vector_rezultat este vectorul format din componentele
 *numarului din primul parametru al functiei
 *@param nr_cifre reprezinta numarul total de cifre al vectorului
 *vector_rezultate
@@ -128,6 +175,42 @@ void Become_Vector( int numar_de_transformat, int vector_rezultat[20], int &nr_c
 }
 int main()
 {
+    int t;
+    do{
+
+        cout<<"Apasati 1 daca doriti sa verificati apartenenta unui cuvant"<<endl;
+        cout<<"Apasati 2 daca doriti sa transformati AFN-L in AFD"<<endl;
+        cout<<"Apasati 0 pentru a iesi"<<endl;
+        cin>>t;
+        switch(t){
+        case 1:
+            {
+                ifstream f("dat.in");
+                cout << "Introduceti numarul nodului care contine starea initiala: ";
+                cin >> stareinitiala;
+                cout << "Introduceti numarul starilor finale: ";
+                cin>>nrfin;
+                cout << "Introduceti starile finale: ";
+                int OK = 0;
+                for(int i = 0; i < nrfin; i ++)
+                    cin >> starifin[i];
+                f >> nrmuchii;
+                for(int i = 0; i < nrmuchii; i ++)
+                {
+                    f >> tranz[i].nodcurent;
+                    f >> tranz[i].litera;
+                    f >> tranz[i].nodurmator;
+                }
+                cout << "Introduceti cuvantul:" << endl;
+                cin >> cuvant;
+                cout << endl;
+                if(verificareautomat(cuvant))
+                        cout << "acceptat";
+                else cout << "neacceptat";
+                return 0;
+            }break;
+        case 2:
+            {
     int matrice[20][20]; /// unde retin lambda-a-lambda, lambda-b-lambda etc
     int Nr_Stari, Nr_Stari_Finale, Stari_Finale[10], Nr_Total_Tranzitii, drum_Lambda[20][20];
     char vector_Litere[20], litera;
@@ -254,12 +337,22 @@ int main()
         if(adauga_nod0 == 1) MAKE_NUMBER(stare_noua,0);
         matrice_AFD[i+1][w+1] = stare_noua;
     }
+    for(int i=0;i<Nr_Stari;i++) ///afisare matrice L-a-L
+        {
+            for(int j=0;j<Nr_Litere; j++)
+                cout<<matrice[i][j]<<" ";
+        cout<<endl;
+        }
     for(int i=0;i<Nr_Linii_AFD;i++) ///afisare tranzitii
         {
             for(int j=1;j<Nr_Litere+1; j++)
                 cout<<matrice_AFD[i][0]<<" "<<vector_Litere[j-1]<<" "<<matrice_AFD[i][j]<<" "<<endl;
         cout<<endl;
         }
+            }break;
+        }
+    }while(t!=0);
+
 
    return 0;
 
